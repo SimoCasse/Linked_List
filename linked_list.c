@@ -33,18 +33,22 @@
       }
        item->next = NULL;
        return item;
-      }
-       struct list_node *list_pop(struct list_node **head)
-      {
-       struct list_node *current_head = *head;
-          if (!current_head)
-        {
-          return NULL;
-        }
-         *head = (*head)->next;
-         current_head->next = NULL;
-        return current_head;
-        }
+    }
+    
+  struct list_node *list_pop(struct list_node **head)
+{
+    struct list_node *current_head = *head;
+    if (!current_head)
+    {
+        return NULL;
+    }
+
+    *head = (*head)->next;
+    current_head->next = NULL;
+
+    return current_head;
+}
+
     struct string_item
     {
      struct list_node node;
@@ -60,14 +64,48 @@
        item->string = string;
       return item;
      }
+  
+  struct list_node *list_remove(struct list_node **head, struct list_node *item)
+{
+    struct list_node *last_node = NULL;
+    struct list_node *current_node = *head;
+    if (!current_node)
+    {
+        return NULL;
+    }
+
+    if (*head == item)
+    {
+        return list_pop(head);
+    }
+
+    while (current_node)
+    {
+        if (current_node == item)
+        {
+            last_node->next = current_node->next;
+            current_node->next = NULL;
+            return current_node;
+        }
+        last_node = current_node;
+        current_node = current_node->next;
+    }
+
+    return current_node;
+}
   int main()
   {
    struct string_item *my_linked_list = NULL;
    list_append(macro_list &my_linked_list, macro_pointer string_item_new ("Hello"));
-   list_append(macro_list &my_linked_list, macro_pointer string_item_new("Test01"));
+   //list_append(macro_list &my_linked_list, macro_pointer string_item_new("1"));
+   
+   struct string_item *item_to_remove =list_append(macro_list &my_linked_list, macro_pointer string_item_new("1"));
+   list_remove(macro_list &my_linked_list, item_to_remove);
+   
    list_append(macro_list &my_linked_list, macro_pointer string_item_new("Test02"));
    list_append(macro_list &my_linked_list, macro_pointer string_item_new("Last Item of the Linked List"));
-   list_pop((struct list_node **)&my_linked_list);
+   //list_pop((struct list_node **)&my_linked_list);
+
    struct string_item *string_item = my_linked_list;
    while (string_item)
    {
